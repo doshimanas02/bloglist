@@ -1,0 +1,7 @@
+POST http://localhost:3000/api/blogs/67ed7e980dc923d91ffb14a3/comments
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRvc2hpbWFuYXMwMiIsImlkIjoiNjdjYWJhNDEzMzIzZmM0YTFhNzg2MjY3IiwiaWF0IjoxNzQ3OTA4NzU5LCJleHAiOjE3NDc5MTIzNTl9.lXHovVXlB-YUk7LkU_LLqGtvLeAz9Kl_SIUr9k6AqZI
+Content-Type: application/json
+
+{
+  "comment": "So true!"
+}
