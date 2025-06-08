@@ -37,7 +37,7 @@ const Navigation = () => {
       <div className="ml-auto">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="secondary">{user.name}</Button>
+            <Button variant="secondary" data-testid="profile-nav-btn">{user.name}</Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem onSelect={() => navigate(`/users/${user.id}`)}>

@@ -5,12 +5,12 @@
     "dev-fe": "vite",
     "build-fe": "vite build",
     "preview-fe": "vite preview",
-    "test-fe": "vitest run",
-    "start-be": "cross-env NODE_ENV=production node index.js",
+    "start": "npm run build-fe && cross-env NODE_ENV=production node index.js",
+    "start:test": "npm run build-fe && cross-env NODE_ENV=test node index.js",
     "dev-be": "cross-env NODE_ENV=development nodemon index.js",
-    "test-be": "cross-env NODE_ENV=test node --test --test-concurrency=1",
-    "start:test-be": "cross-env NODE_ENV=test node index.js",
-    "lint": "eslint ."
+    "test": "cross-env NODE_ENV=test node --test --test-concurrency=1",
+    "lint": "eslint .",
+    "test:e2e": "playwright test --project=chromium --project=firefox"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
@@ -49,6 +49,7 @@
     "@eslint/compat": "^1.2.8",
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.25.1",
+    "@playwright/test": "^1.52.0",
     "@stylistic/eslint-plugin-js": "^3.1.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",

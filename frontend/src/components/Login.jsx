@@ -44,7 +44,7 @@ const Login = () => {
               await dispatch(login(values.username, values.password))
               navigate(state.path || '/')
             })}
-            className='space-y-8 flex flex-col justify-center items-center'
+            className='space-y-8 flex flex-col justify-center items-center' data-testid="login-form"
           >
             <FormField
               control={form.control}
@@ -53,7 +53,7 @@ const Login = () => {
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input placeholder='doshimanas02' {...field} />
+                    <Input placeholder='doshimanas02' {...field} data-testid='login-username-input'/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -66,7 +66,7 @@ const Login = () => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input type='password' {...field} />
+                    <Input type='password' {...field} data-testid='login-password-input'/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -82,7 +82,7 @@ const Login = () => {
               >
                 Sign Up
               </Button>
-              <Button type='submit'>Login</Button>
+              <Button type='submit' data-testid="login-btn">Login</Button>
             </div>
           </form>
         </Form>
