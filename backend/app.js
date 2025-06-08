@@ -8,6 +8,7 @@ const usersRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
 const cors = require('cors')
 const mongoose = require('mongoose')
+const path = require('path')
 
 mongoose.connect(config.MONGO_URI).then(() => {
   logger.info('Connected to MongoDB')
@@ -18,7 +19,7 @@ mongoose.connect(config.MONGO_URI).then(() => {
 const app = express()
 app.use(cors())
 app.use(express.json())
-app.use(express.static('dist'))
+app.use(express.static('dist-fe'))
 app.use(middleware.tokenExtractor)
 app.use(middleware.requestLogger)
 
@@ -31,6 +32,9 @@ if (process.env.NODE_ENV === 'test') {
   app.use('/api/testing', testingRouter)
 }
 
-app.use(middleware.unknownEndpoint)
+//app.use(middleware.unknownEndpoint)
+app.get('/*', function (req, res) {
+  res.sendFile(path.join(__dirname, '../dist-fe', 'index.html'))
+})
 app.use(middleware.errorHandler)
 module.exports = app

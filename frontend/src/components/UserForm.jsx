@@ -53,7 +53,7 @@ const UserForm = () => {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input {...field} className="bg-slate-300" />
+                    <Input {...field} className="bg-slate-300" data-testid='register-name-input' />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -66,7 +66,7 @@ const UserForm = () => {
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input {...field} className="bg-slate-300" />
+                    <Input {...field} className="bg-slate-300" data-testid='register-username-input' />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -79,7 +79,7 @@ const UserForm = () => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input {...field} className="bg-slate-300" />
+                    <Input {...field} className="bg-slate-300" data-testid='register-password-input' />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -88,14 +88,14 @@ const UserForm = () => {
             <div className="flex gap-4">
               <Button
                 variant="outline"
-                onClick={(event) => {
+                onClick={async (event) => {
                   event.preventDefault()
-                  navigate('/login')
+                  await navigate('/login')
                 }}
               >
                 Login
               </Button>
-              <Button type="submit">Register</Button>
+              <Button type="submit" data-testid='register-btn' >Register</Button>
             </div>
           </form>
         </Form>
