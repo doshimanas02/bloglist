@@ -54,9 +54,9 @@ const Blog = ({ blog }) => {
           Added by:{' '}
           <span className="text-secondary-foreground">{blog.user.name}</span>
         </p>
-        <p className="text-secondary-foreground">{blog.likes} likes </p>
+        <p className="text-secondary-foreground" data-testid='like-count-text'>{blog.likes} likes </p>
         <div className="flex gap-2">
-          <Button onClick={() => dispatch(likeBlog(blog))} variant="outline">
+          <Button onClick={() => dispatch(likeBlog(blog))} variant="outline" data-testid="blog-like-btn">
             ♡ Like
           </Button>
 

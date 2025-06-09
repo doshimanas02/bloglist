@@ -1,10 +1,10 @@
 const router = require('express').Router()
-const Blog = require('../models/blog')
-const User = require('../models/user')
+const { addTestUsers } = require('../tests/users')
+const { addTestBlogs } = require('../tests/blogs')
 
 router.post('/reset', async (request, response) => {
-  await Blog.deleteMany({})
-  await User.deleteMany({})
+  await addTestUsers()
+  await addTestBlogs()
   response.status(204).end()
 })
 
