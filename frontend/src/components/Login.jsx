@@ -42,7 +42,10 @@ const Login = () => {
           <form
             onSubmit={form.handleSubmit(async (values) => {
               await dispatch(login(values.username, values.password))
-              navigate(state.path || '/')
+              if (!state)
+                await navigate('/')
+              else
+                await navigate(state.path)
             })}
             className='space-y-8 flex flex-col justify-center items-center' data-testid="login-form"
           >
@@ -75,9 +78,9 @@ const Login = () => {
             <div className='flex gap-4'>
               <Button
                 variant='outline'
-                onClick={(event) => {
+                onClick={async (event) => {
                   event.preventDefault()
-                  navigate('/register')
+                  await navigate('/register')
                 }}
               >
                 Sign Up

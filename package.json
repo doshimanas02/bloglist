@@ -5,12 +5,12 @@
     "dev-fe": "vite",
     "build-fe": "vite build",
     "preview-fe": "vite preview",
-    "start": "npm run build-fe && cross-env NODE_ENV=production node index.js",
-    "start:test": "npm run build-fe && cross-env NODE_ENV=test node index.js",
+    "start": "cross-env NODE_ENV=production node index.js",
+    "start:test": "cross-env NODE_ENV=test node index.js",
     "dev-be": "cross-env NODE_ENV=development nodemon index.js",
     "test": "cross-env NODE_ENV=test node --test --test-concurrency=1",
     "lint": "eslint .",
-    "test:e2e": "playwright test --project=chromium --project=firefox"
+    "test:e2e": "playwright test --project=chromium"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",

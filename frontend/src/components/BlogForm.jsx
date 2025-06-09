@@ -50,7 +50,7 @@ const BlogForm = () => {
         }}
       >
         <DialogTrigger asChild>
-          <Button>Add Blog</Button>
+          <Button data-testid='add-blog-btn'>Add Blog</Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px] bg-slate-200">
           <DialogHeader>
@@ -78,7 +78,7 @@ const BlogForm = () => {
                   <FormItem>
                     <FormLabel>Title</FormLabel>
                     <FormControl>
-                      <Input {...field} className="bg-slate-300" />
+                      <Input {...field} className="bg-slate-300" data-testid='blogform-title-input' />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -91,7 +91,7 @@ const BlogForm = () => {
                   <FormItem>
                     <FormLabel>Author</FormLabel>
                     <FormControl>
-                      <Input {...field} className="bg-slate-300" />
+                      <Input {...field} className="bg-slate-300" data-testid='blogform-author-input' />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -105,13 +105,13 @@ const BlogForm = () => {
                   <FormItem>
                     <FormLabel>URL</FormLabel>
                     <FormControl>
-                      <Input {...field} className="bg-slate-300" />
+                      <Input {...field} className="bg-slate-300" data-testid='blogform-url-input' />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <Button type="submit">Add Blog</Button>
+              <Button type="submit" data-testid='blogform-submit-btn' >Add Blog</Button>
             </form>
           </Form>
         </DialogContent>

@@ -25,5 +25,6 @@ export default defineConfig({
   webServer: {
     command: "npm run start:test",
     url: "http://localhost:3000",
+    reuseExistingServer: true,
   },
 });

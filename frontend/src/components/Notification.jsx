@@ -9,7 +9,7 @@ const Notification = () => {
     display: notificationEvent.message ? 'block' : 'none',
   }
   return (
-    <div className="m-auto bottom-10 right-0 left-0 w-3xl animate" style={styles}>
+    <div className="m-auto bottom-10 right-0 left-0 w-3xl animate" style={styles} data-testid="notification">
       <Alert variant={notificationEvent.success ? '' : 'destructive'}>
         {notificationEvent.success ? (
           <Terminal className="h-4 w-4" />

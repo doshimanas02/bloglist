@@ -46,7 +46,7 @@ const Blogs = () => {
                   key={blog.id}
                   onClick={() => navigate(`/blogs/${blog.id}`)}
                 >
-                  <TableCell>{blog.title}</TableCell>
+                  <TableCell data-testid='blogs-title'>{blog.title}</TableCell>
                   <TableCell>{blog.author}</TableCell>
                   <TableCell className="text-right">{blog.likes}</TableCell>
                 </TableRow>
