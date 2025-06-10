@@ -1,7 +1,8 @@
 import { describe, beforeEach, test, expect } from '@playwright/test'
-import { login, createBlog, getBlogByTitle, likeBlog, register } from './helper'
+import { login, createBlog, getBlogByTitle, likeBlog, addComment } from './helper'
+import assert from 'node:assert'
 
-describe('When logged in', () => {
+describe('Blogs', () => {
   beforeEach(async ({ page, request }) => {
     await request.post('/api/testing/reset')
     await login(page, 'johnpuller', 'johnpass01')
@@ -22,52 +23,58 @@ describe('When logged in', () => {
     await expect(likeCountLocator).toContainText('1 likes')
   })
 
-  // test('a created blog can be deleted', async ({ page }) => {
-  //   page.on('dialog', async (dialog) => {
-  //     await expect(dialog.message()).toContain('Delete')
-  //     await dialog.accept()
-  //   })
+  test('a created blog can be deleted', async ({ page }) => {
+    page.on('dialog', async (dialog) => {
+      await expect(dialog.message()).toContain('Delete')
+      await dialog.accept()
+    })
+    const blogLocator = await getBlogByTitle(page, 'Type')
+    await blogLocator.click()
+    await page.getByRole('button', { name: /delete/i }).click()
+    const pattern = /\/api\/blogs\/*/gm
+    await page.waitForResponse(response => pattern.test(response.url()))
+    const deletedBlogLocator = await getBlogByTitle(page, 'Type')
+    await expect(deletedBlogLocator).not.toBeDefined()
+  })
 
-  //   await createBlog(page, 'Every Dev', 'Hello World', 'localhost')
-  //   const blogLocator = await getBlogByTitle(page, 'Hello World')
-  //   await blogLocator.getByRole('button', { name: 'Show' }).click()
-  //   await blogLocator.getByRole('button', { name: 'Delete' }).click()
-  //   await expect(page.locator('.blog-header')).toHaveCount(0)
-  // })
+  test('creator of the blog can only delete the blog', async ({ page }) => {
+    const blogLocator = await getBlogByTitle(page, 'TDD')
+    await blogLocator.click()
+    const deleteBtnLocator = await page.getByRole('button', { name: /delete/i })
+    await expect(deleteBtnLocator).not.toBeVisible()
+  })
 
-  // test('creator of the blog can only delete the blog', async ({ page }) => {
-  //   await register(page, 'otheruser', 'Other user', 'manas')
-  //   await createBlog(page, 'Every Dev', 'Hello World', 'localhost')
-  //   await page.getByRole('button', { name: 'Logout' }).click()
-  //   await login(page, 'otheruser', 'manas')
-  //   await page.waitForTimeout(500)
-  //   const showBtnLocator = await page.getByRole('button', { name: 'Show' })
-  //   await showBtnLocator.click()
-  //   const deleteBtnLocator = await page.getByRole('button', {
-  //     name: 'Delete',
-  //   })
-  //   await expect(deleteBtnLocator).not.toBeVisible()
-  // })
+  test('blogs are sorted by likes', async ({ page }) => {
+    await createBlog(page, 'Every Dev', 'Hello World 1', 'localhost')
+    const blogLocator1 = await getBlogByTitle(page, 'Hello World 1')
+    await blogLocator1.click()
+    await likeBlog(page)
 
-  // test('blogs are sorted by likes', async ({ page }) => {
-  //   await createBlog(page, 'Every Dev', 'Hello World 1', 'localhost')
-  //   var blogLocator = await getBlogByTitle(page, 'Hello World 1')
-  //   await likeBlog(blogLocator)
+    await createBlog(page, 'Every Dev', 'Hello World 2', 'localhost')
+    const blogLocator2 = await getBlogByTitle(page, 'Hello World 2')
+    await blogLocator2.click()
+    await likeBlog(page)
+    await likeBlog(page)
 
-  //   await createBlog(page, 'Every Dev', 'Hello World 2', 'localhost')
-  //   blogLocator = await getBlogByTitle(page, 'Hello World 2')
-  //   await likeBlog(blogLocator)
-  //   await likeBlog(blogLocator)
+    await page.goto('/')
+    await page.waitForResponse('/api/blogs')
+    const allBlogTitlesLocator = await page.getByTestId('blogs-title').all()
+    const helloWorldBlogs = []
+    for (const locator of allBlogTitlesLocator) {
+      const content = await locator.textContent()
+      if (content.indexOf('Hello World') >= 0) {
+        helloWorldBlogs.push(locator)
+      }
+    }
+    await expect(helloWorldBlogs[0].locator('..').getByTestId('blogs-like-count')).toContainText('2')
+    await expect(helloWorldBlogs[1].locator('..').getByTestId('blogs-like-count')).toContainText('1')
+  })
 
-  //   await createBlog(page, 'Every Dev', 'Hello World 3', 'localhost')
-  //   blogLocator = await getBlogByTitle(page, 'Hello World 3')
-  //   await likeBlog(blogLocator)
-  //   await likeBlog(blogLocator)
-  //   await likeBlog(blogLocator)
-
-  //   const blogs = await page.locator('.blog').all()
-  //   await expect(blogs[0]).toContainText('likes 3')
-  //   await expect(blogs[1]).toContainText('likes 2')
-  //   await expect(blogs[2]).toContainText('likes 1')
-  // })
+  test('user can comment on blog', async ({ page }) => {
+    const blogLocator = await getBlogByTitle(page, 'TDD')
+    await blogLocator.click()
+    await addComment(page, 'Nice')
+    const comment = await page.getByTestId('blog-comment-text').last().textContent()
+    assert(comment.indexOf('Nice') >= 0)
+  })
 })

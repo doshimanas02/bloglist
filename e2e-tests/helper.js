@@ -5,7 +5,7 @@ export const login = async (page, username, password) => {
   await usernameLocator.fill(username)
   await passwordLocator.fill(password)
   await page.getByTestId('login-btn').click()
-  await page.waitForURL('/blogs', { timeout: 2000 })
+  await page.waitForResponse('/api/login')
 }
 
 export const register = async(page, name, username, password) => {
@@ -17,9 +17,11 @@ export const register = async(page, name, username, password) => {
   await usernameLocator.fill(username)
   await passwordLocator.fill(password)
   await page.getByTestId('register-btn').click()
+  await page.waitForResponse('/api/users')
 }
 
 export const createBlog = async (page, author, title, url) => {
+  await page.goto('/')
   await page.getByTestId('add-blog-btn').click()
   const authorLocator = await page.getByTestId('blogform-author-input')
   const titleLocator = await page.getByTestId('blogform-title-input')
@@ -34,6 +36,8 @@ export const createBlog = async (page, author, title, url) => {
 export const likeBlog = async (page) => {
   const blogLikeBtnLocator = await page.getByTestId('blog-like-btn')
   await blogLikeBtnLocator.click()
+  const pattern = /\/api\/blogs\/*/gm
+  await page.waitForResponse(response => pattern.test(response.url()))
 }
 
 export const getBlogByTitle = async (page, title) => {
@@ -45,4 +49,12 @@ export const getBlogByTitle = async (page, title) => {
     }
     return blogLocator
   }
+}
+
+export const addComment = async (page, comment) => {
+  const commentLocator = await page.getByTestId('blog-comment-input')
+  await commentLocator.fill(comment)
+  await page.getByRole('button', { name: /comment/i }).click()
+  const pattern = /\/api\/blogs\/.*\/comments/i
+  await page.waitForResponse(response => pattern.test(response.url()))
 }

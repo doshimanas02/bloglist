@@ -48,7 +48,7 @@ const Blogs = () => {
                 >
                   <TableCell data-testid='blogs-title'>{blog.title}</TableCell>
                   <TableCell>{blog.author}</TableCell>
-                  <TableCell className="text-right">{blog.likes}</TableCell>
+                  <TableCell className="text-right" data-testid='blogs-like-count'>{blog.likes}</TableCell>
                 </TableRow>
               )
             })}
@@ -59,7 +59,7 @@ const Blogs = () => {
   }
 
   return (
-    <div className="p-4">
+    <div className="p-4 blogs">
       <div className="flex w-full">
         <span className="text-4xl">Hot Blogs</span>
         <div className="ml-auto">
