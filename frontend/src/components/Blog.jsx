@@ -96,6 +96,7 @@ const Blog = ({ blog }) => {
                       {...field}
                       className="w-72"
                       placeholder="Thoughts?"
+                      data-testid="blog-comment-input"
                     />
                   </FormControl>
                   <FormMessage />
@@ -110,7 +111,7 @@ const Blog = ({ blog }) => {
         {blog.comments.length > 0 ? (
           <ul>
             {blog.comments.map((c, i) => (
-              <li key={i}>{c}</li>
+              <li key={i} data-testid='blog-comment-text'>{c}</li>
             ))}
           </ul>
         ) : (
