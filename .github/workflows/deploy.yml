@@ -20,7 +20,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: ./build_script.sh
+      - run: ./build.sh
       - run: npm run test
       - run: npm run test:e2e
 
