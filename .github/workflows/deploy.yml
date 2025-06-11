@@ -24,7 +24,6 @@ jobs:
       - run: npm run test
       - name: Install playwright browsers
         run: npx playwright install --with-deps chromium firefox
-      - run: npm run start:test
       - run: npm run test:e2e
 
   deploy:
