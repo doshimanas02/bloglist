@@ -18,7 +18,7 @@ const Users = () => {
   return (
     <div className="p-4 m-4">
       <p className="text-4xl">Users</p>
-      <Table className="mt-10">
+      <Table className="mt-10 users-table">
         <TableHeader>
           <TableRow>
             <TableHead className="max-w-2xl">User</TableHead>
