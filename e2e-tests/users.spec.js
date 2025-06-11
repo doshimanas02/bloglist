@@ -1,4 +1,4 @@
-import { expect, describe, test, beforeEach } from '@playwright/test'
+import { describe, test, beforeEach } from '@playwright/test'
 import { login, getUserBlogCount, createBlog, deleteBlog } from './helper'
 import assert from 'node:assert'
 
