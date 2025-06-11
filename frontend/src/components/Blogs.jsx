@@ -31,7 +31,7 @@ const Blogs = () => {
   } else {
     blogsHtml = (
       <div className="mt-4">
-        <Table>
+        <Table className="blogs-table">
           <TableHeader>
             <TableRow>
               <TableHead className="min-w-2xl">Title</TableHead>

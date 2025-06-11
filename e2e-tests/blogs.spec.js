@@ -23,9 +23,8 @@ describe('Blogs', () => {
 
   test('a created blog can be deleted', async ({ page }) => {
     await deleteBlog(page, 'Type')
-    await navigateToBlogs(page)
     const deletedBlogLocator = await getBlogByTitle(page, 'Type')
-    await expect(deletedBlogLocator).not.toBeDefined()
+    await expect(deletedBlogLocator).toHaveCount(0)
   })
 
   test('creator of the blog can only delete the blog', async ({ page }) => {

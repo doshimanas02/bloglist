@@ -1,3 +1,5 @@
+import { expect } from '@playwright/test'
+
 export const login = async (page, username, password) => {
   await page.goto('/')
   const usernameLocator = await page.getByTestId('login-username-input')
@@ -44,14 +46,11 @@ export const likeBlog = async (page, blog) => {
 }
 
 export const getBlogByTitle = async (page, title) => {
-  const allBlogTitlesLocator = await page.getByTestId('blogs-title').all()
-  for(const blogLocator of allBlogTitlesLocator) {
-    const content = await blogLocator.textContent()
-    if (content.indexOf(title) < 0) {
-      continue
-    }
-    return blogLocator
+  const cell = await page.getByRole('cell', { name: title })
+  if (cell) {
+    return cell.locator('..')
   }
+  return cell
 }
 
 export const addComment = async (page, blog, comment) => {
@@ -84,10 +83,10 @@ export const getUserBlogCount = async(page, user) => {
 
 
 export const deleteBlog = async(page, blog) => {
-  await navigateToBlogs(page)
-  page.on('dialog', async (dialog) => {
+  page.once('dialog', async (dialog) => {
     await dialog.accept()
   })
+  await navigateToBlogs(page)
   const blogLocator = await getBlogByTitle(page, blog)
   await blogLocator.click()
   await page.getByRole('button', { name: /delete/i }).click()
@@ -98,9 +97,17 @@ export const deleteBlog = async(page, blog) => {
 export const navigateToBlogs = async(page) => {
   const blogsNavBtn = await page.getByTestId('blogs-nav-btn')
   await blogsNavBtn.click()
+  await expect(page.locator('.blogs-table')).toBeVisible()
 }
 
 export const navigateToUsers = async(page) => {
   const usersNavBtn = await page.getByTestId('users-nav-btn')
   await usersNavBtn.click()
+  await page.locator('.users-table').waitFor()
+}
+
+export const beforeEach = async (page, request) => {
+  await page.goto('/')
+  await request.post('/api/testing/reset')
+  await expect(page.locator('.blogs-table')).toBeVisible()
 }
