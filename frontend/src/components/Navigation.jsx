@@ -28,10 +28,10 @@ const Navigation = () => {
     <div className="flex w-full items-center" style={navContainerStyles}>
       <ul>
         <li style={navItemStyles}>
-          <Link to="/blogs">Blogs</Link>
+          <Link to="/blogs" data-testid='blogs-nav-btn'>Blogs</Link>
         </li>
         <li style={navItemStyles}>
-          <Link to="/users">Users</Link>
+          <Link to="/users" data-testid='users-nav-btn'>Users</Link>
         </li>
       </ul>
       <div className="ml-auto">

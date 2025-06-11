@@ -21,7 +21,7 @@ export const register = async(page, name, username, password) => {
 }
 
 export const createBlog = async (page, author, title, url) => {
-  await page.goto('/')
+  await navigateToBlogs(page)
   await page.getByTestId('add-blog-btn').click()
   const authorLocator = await page.getByTestId('blogform-author-input')
   const titleLocator = await page.getByTestId('blogform-title-input')
@@ -33,7 +33,10 @@ export const createBlog = async (page, author, title, url) => {
   await page.waitForResponse('/api/blogs')
 }
 
-export const likeBlog = async (page) => {
+export const likeBlog = async (page, blog) => {
+  await navigateToBlogs(page)
+  const blogLocator = await getBlogByTitle(page, blog)
+  await blogLocator.click()
   const blogLikeBtnLocator = await page.getByTestId('blog-like-btn')
   await blogLikeBtnLocator.click()
   const pattern = /\/api\/blogs\/*/gm
@@ -51,10 +54,53 @@ export const getBlogByTitle = async (page, title) => {
   }
 }
 
-export const addComment = async (page, comment) => {
+export const addComment = async (page, blog, comment) => {
+  await navigateToBlogs(page)
+  const blogLocator = await getBlogByTitle(page, blog)
+  await blogLocator.click()
   const commentLocator = await page.getByTestId('blog-comment-input')
   await commentLocator.fill(comment)
   await page.getByRole('button', { name: /comment/i }).click()
   const pattern = /\/api\/blogs\/.*\/comments/i
   await page.waitForResponse(response => pattern.test(response.url()))
+}
+
+export const getUserBlogCount = async(page, user) => {
+  await navigateToUsers(page)
+  const allUsers = await page.getByTestId('users-name-text').all()
+  let re = new RegExp(user, 'i')
+  var userLocator = null
+  for (const locator of allUsers) {
+    if (re.test(await locator.textContent())) {
+      userLocator = locator
+      break
+    }
+  }
+  await userLocator.locator('..').click()
+  await page.waitForResponse('https://dog.ceo/api/breeds/image/random')
+  const allBlogs = await page.getByTestId('user-blog').all()
+  return allBlogs.length
+}
+
+
+export const deleteBlog = async(page, blog) => {
+  await navigateToBlogs(page)
+  page.on('dialog', async (dialog) => {
+    await dialog.accept()
+  })
+  const blogLocator = await getBlogByTitle(page, blog)
+  await blogLocator.click()
+  await page.getByRole('button', { name: /delete/i }).click()
+  const pattern = /\/api\/blogs\/*/gm
+  await page.waitForResponse(response => pattern.test(response.url()))
+}
+
+export const navigateToBlogs = async(page) => {
+  const blogsNavBtn = await page.getByTestId('blogs-nav-btn')
+  await blogsNavBtn.click()
+}
+
+export const navigateToUsers = async(page) => {
+  const usersNavBtn = await page.getByTestId('users-nav-btn')
+  await usersNavBtn.click()
 }

@@ -36,7 +36,7 @@ const User = ({ user }) => {
         <ul>
           {user.blogs.map((blog) => {
             return (
-              <li key={blog.id}>
+              <li key={blog.id} data-testid='user-blog'>
                 <Link to={`/blogs/${blog.id}`}>{blog.title} by {blog.author}</Link>
               </li>
             )
