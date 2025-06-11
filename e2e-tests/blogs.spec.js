@@ -1,5 +1,5 @@
 import { describe, beforeEach, test, expect } from '@playwright/test'
-import { login, createBlog, getBlogByTitle, likeBlog, addComment } from './helper'
+import { login, createBlog, getBlogByTitle, likeBlog, addComment, deleteBlog, navigateToBlogs } from './helper'
 import assert from 'node:assert'
 
 describe('Blogs', () => {
@@ -16,23 +16,14 @@ describe('Blogs', () => {
   })
 
   test('a blog can be liked', async ({ page }) => {
-    const blogLocator = await getBlogByTitle(page, 'TDD')
-    await blogLocator.click()
-    await likeBlog(page)
+    await likeBlog(page, 'TDD')
     const likeCountLocator = await page.getByTestId('like-count-text')
     await expect(likeCountLocator).toContainText('1 likes')
   })
 
   test('a created blog can be deleted', async ({ page }) => {
-    page.on('dialog', async (dialog) => {
-      await expect(dialog.message()).toContain('Delete')
-      await dialog.accept()
-    })
-    const blogLocator = await getBlogByTitle(page, 'Type')
-    await blogLocator.click()
-    await page.getByRole('button', { name: /delete/i }).click()
-    const pattern = /\/api\/blogs\/*/gm
-    await page.waitForResponse(response => pattern.test(response.url()))
+    await deleteBlog(page, 'Type')
+    await navigateToBlogs(page)
     const deletedBlogLocator = await getBlogByTitle(page, 'Type')
     await expect(deletedBlogLocator).not.toBeDefined()
   })
@@ -46,18 +37,13 @@ describe('Blogs', () => {
 
   test('blogs are sorted by likes', async ({ page }) => {
     await createBlog(page, 'Every Dev', 'Hello World 1', 'localhost')
-    const blogLocator1 = await getBlogByTitle(page, 'Hello World 1')
-    await blogLocator1.click()
-    await likeBlog(page)
+    await likeBlog(page, 'Hello World 1')
 
     await createBlog(page, 'Every Dev', 'Hello World 2', 'localhost')
-    const blogLocator2 = await getBlogByTitle(page, 'Hello World 2')
-    await blogLocator2.click()
-    await likeBlog(page)
-    await likeBlog(page)
+    await likeBlog(page, 'Hello World 2')
+    await likeBlog(page, 'Hello World 2')
 
-    await page.goto('/')
-    await page.waitForResponse('/api/blogs')
+    await navigateToBlogs(page)
     const allBlogTitlesLocator = await page.getByTestId('blogs-title').all()
     const helloWorldBlogs = []
     for (const locator of allBlogTitlesLocator) {
@@ -73,7 +59,7 @@ describe('Blogs', () => {
   test('user can comment on blog', async ({ page }) => {
     const blogLocator = await getBlogByTitle(page, 'TDD')
     await blogLocator.click()
-    await addComment(page, 'Nice')
+    await addComment(page, 'TDD', 'Nice')
     const comment = await page.getByTestId('blog-comment-text').last().textContent()
     assert(comment.indexOf('Nice') >= 0)
   })

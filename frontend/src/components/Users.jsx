@@ -32,7 +32,7 @@ const Users = () => {
                 key={user.id}
                 onClick={() => navigate(`/users/${user.id}`)}
               >
-                <TableCell>{user.name}</TableCell>
+                <TableCell data-testid='users-name-text'>{user.name}</TableCell>
                 <TableCell>{user.blogs.length}</TableCell>
 
               </TableRow>
