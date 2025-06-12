@@ -14,6 +14,7 @@ describe('Users', () => {
   test('user blog count increases after creating a blog', async({ page }) => {
     const johnBlogCount = await getUserBlogCount(page, 'john')
     await createBlog(page, 'Dan Abramov', 'React-Redux', 'google.com')
+    await page.waitForLoadState('networkidle')
     const newJohnBlogCount = await getUserBlogCount(page, 'john')
     assert(johnBlogCount + 1 === newJohnBlogCount)
   })
