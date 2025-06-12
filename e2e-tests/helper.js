@@ -1,5 +1,17 @@
 import { expect } from '@playwright/test'
 
+export const navigateToBlogs = async(page) => {
+  const blogsNavBtn = await page.getByTestId('blogs-nav-btn')
+  await blogsNavBtn.click()
+  await expect(page.locator('.blogs-table')).toBeVisible()
+}
+
+export const navigateToUsers = async(page) => {
+  const usersNavBtn = await page.getByTestId('users-nav-btn')
+  await usersNavBtn.click()
+  await page.locator('.users-table').waitFor()
+}
+
 export const login = async (page, username, password) => {
   await page.goto('/')
   const usernameLocator = await page.getByTestId('login-username-input')
@@ -28,6 +40,9 @@ export const createBlog = async (page, author, title, url) => {
   const authorLocator = await page.getByTestId('blogform-author-input')
   const titleLocator = await page.getByTestId('blogform-title-input')
   const urlLocator = await page.getByTestId('blogform-url-input')
+  await expect(authorLocator).toBeVisible()
+  await expect(titleLocator).toBeVisible()
+  await expect(urlLocator).toBeVisible()
   await authorLocator.fill(author)
   await titleLocator.fill(title)
   await urlLocator.fill(url)
@@ -37,26 +52,20 @@ export const createBlog = async (page, author, title, url) => {
 
 export const likeBlog = async (page, blog) => {
   await navigateToBlogs(page)
-  const blogLocator = await getBlogByTitle(page, blog)
-  await blogLocator.click()
+  const blogLocator = await page.getByRole('cell', { name: blog })
+  await expect(blogLocator).toHaveCount(1)
+  await blogLocator.locator('..').click()
   const blogLikeBtnLocator = await page.getByTestId('blog-like-btn')
   await blogLikeBtnLocator.click()
   const pattern = /\/api\/blogs\/*/gm
   await page.waitForResponse(response => pattern.test(response.url()))
 }
 
-export const getBlogByTitle = async (page, title) => {
-  const cell = await page.getByRole('cell', { name: title })
-  if (cell) {
-    return cell.locator('..')
-  }
-  return cell
-}
-
 export const addComment = async (page, blog, comment) => {
   await navigateToBlogs(page)
-  const blogLocator = await getBlogByTitle(page, blog)
-  await blogLocator.click()
+  const blogLocator = await page.getByRole('cell', { name: blog })
+  await expect(blogLocator).toHaveCount(1)
+  await blogLocator.locator('..').click()
   const commentLocator = await page.getByTestId('blog-comment-input')
   await commentLocator.fill(comment)
   await page.getByRole('button', { name: /comment/i }).click()
@@ -66,18 +75,12 @@ export const addComment = async (page, blog, comment) => {
 
 export const getUserBlogCount = async(page, user) => {
   await navigateToUsers(page)
-  const allUsers = await page.getByTestId('users-name-text').all()
-  let re = new RegExp(user, 'i')
-  var userLocator = null
-  for (const locator of allUsers) {
-    if (re.test(await locator.textContent())) {
-      userLocator = locator
-      break
-    }
-  }
+  const userLocator = await page.getByRole('cell', { name: user })
+  await expect(userLocator).toHaveCount(1)
   await userLocator.locator('..').click()
   await page.waitForResponse('https://dog.ceo/api/breeds/image/random')
-  const allBlogs = await page.getByTestId('user-blog').all()
+  const userDetailsLocator = await page.getByTestId('user')
+  const allBlogs = await userDetailsLocator.getByRole('link').all()
   return allBlogs.length
 }
 
@@ -87,27 +90,10 @@ export const deleteBlog = async(page, blog) => {
     await dialog.accept()
   })
   await navigateToBlogs(page)
-  const blogLocator = await getBlogByTitle(page, blog)
-  await blogLocator.click()
+  const blogLocator = await page.getByRole('cell', { name: blog })
+  await expect(blogLocator).toHaveCount(1)
+  await blogLocator.locator('..').click()
   await page.getByRole('button', { name: /delete/i }).click()
   const pattern = /\/api\/blogs\/*/gm
   await page.waitForResponse(response => pattern.test(response.url()))
-}
-
-export const navigateToBlogs = async(page) => {
-  const blogsNavBtn = await page.getByTestId('blogs-nav-btn')
-  await blogsNavBtn.click()
-  await expect(page.locator('.blogs-table')).toBeVisible()
-}
-
-export const navigateToUsers = async(page) => {
-  const usersNavBtn = await page.getByTestId('users-nav-btn')
-  await usersNavBtn.click()
-  await page.locator('.users-table').waitFor()
-}
-
-export const beforeEach = async (page, request) => {
-  await page.goto('/')
-  await request.post('/api/testing/reset')
-  await expect(page.locator('.blogs-table')).toBeVisible()
 }
