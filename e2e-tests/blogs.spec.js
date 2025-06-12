@@ -1,5 +1,5 @@
 import { describe, beforeEach, test, expect } from '@playwright/test'
-import { login, createBlog, getBlogByTitle, likeBlog, addComment, deleteBlog, navigateToBlogs } from './helper'
+import { login, createBlog, likeBlog, addComment, deleteBlog, navigateToBlogs } from './helper'
 import assert from 'node:assert'
 
 describe('Blogs', () => {
@@ -23,13 +23,14 @@ describe('Blogs', () => {
 
   test('a created blog can be deleted', async ({ page }) => {
     await deleteBlog(page, 'Type')
-    const deletedBlogLocator = await getBlogByTitle(page, 'Type')
-    await expect(deletedBlogLocator).toHaveCount(0)
+    const blogLocator = await page.getByRole('cell', { name: 'Type' })
+    await expect(blogLocator).toHaveCount(0)
   })
 
   test('creator of the blog can only delete the blog', async ({ page }) => {
-    const blogLocator = await getBlogByTitle(page, 'TDD')
-    await blogLocator.click()
+    const blogLocator = await page.getByRole('cell', { name: 'TDD' })
+    await expect(blogLocator).toHaveCount(1)
+    await blogLocator.locator('..').click()
     const deleteBtnLocator = await page.getByRole('button', { name: /delete/i })
     await expect(deleteBtnLocator).not.toBeVisible()
   })
@@ -56,8 +57,6 @@ describe('Blogs', () => {
   })
 
   test('user can comment on blog', async ({ page }) => {
-    const blogLocator = await getBlogByTitle(page, 'TDD')
-    await blogLocator.click()
     await addComment(page, 'TDD', 'Nice')
     const comment = await page.getByTestId('blog-comment-text').last().textContent()
     assert(comment.indexOf('Nice') >= 0)
