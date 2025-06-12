@@ -68,9 +68,9 @@ export const addComment = async (page, blog, comment) => {
   await blogLocator.locator('..').click()
   const commentLocator = await page.getByTestId('blog-comment-input')
   await commentLocator.fill(comment)
+  const current = await page.getByTestId('blog-comment-text').all()
   await page.getByRole('button', { name: /comment/i }).click()
-  const pattern = /\/api\/blogs\/.*\/comments/i
-  await page.waitForResponse(response => pattern.test(response.url()))
+  await expect(page.getByTestId('blog-comment-text')).toHaveCount(current.length + 1)
 }
 
 export const getUserBlogCount = async(page, user) => {
@@ -78,8 +78,8 @@ export const getUserBlogCount = async(page, user) => {
   const userLocator = await page.getByRole('cell', { name: user })
   await expect(userLocator).toHaveCount(1)
   await userLocator.locator('..').click()
-  await page.waitForResponse('https://dog.ceo/api/breeds/image/random')
   const userDetailsLocator = await page.getByTestId('user')
+  await expect(userDetailsLocator).toHaveCount(1, { timeout: 100000 })
   const allBlogs = await userDetailsLocator.getByRole('link').all()
   return allBlogs.length
 }
@@ -94,6 +94,5 @@ export const deleteBlog = async(page, blog) => {
   await expect(blogLocator).toHaveCount(1)
   await blogLocator.locator('..').click()
   await page.getByRole('button', { name: /delete/i }).click()
-  const pattern = /\/api\/blogs\/*/gm
-  await page.waitForResponse(response => pattern.test(response.url()))
+  await expect(page.getByRole('cell', { name: blog })).toHaveCount(0)
 }
