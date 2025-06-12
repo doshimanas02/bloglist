@@ -20,6 +20,7 @@ describe('Users', () => {
   test('user blog count decreases after deleting a blog', async({ page }) => {
     const johnBlogCount = await getUserBlogCount(page, 'john')
     await deleteBlog(page, 'Type')
+    await page.waitForLoadState('networkidle')
     const newJohnBlogCount = await getUserBlogCount(page, 'john')
     assert(johnBlogCount - 1 === newJohnBlogCount)
   })
