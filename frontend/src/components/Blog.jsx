@@ -62,9 +62,9 @@ const Blog = ({ blog }) => {
 
           {blog.user.name === user.name ? (
             <Button
-              onClick={() => {
-                dispatch(removeBlog(blog))
-                navigate('/blogs')
+              onClick={async () => {
+                await dispatch(removeBlog(blog))
+                await navigate('/blogs')
               }}
               variant="destructive"
             >

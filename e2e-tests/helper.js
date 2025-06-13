@@ -1,3 +1,17 @@
+import { expect } from '@playwright/test'
+
+export const navigateToBlogs = async(page) => {
+  const blogsNavBtn = await page.getByTestId('blogs-nav-btn')
+  await blogsNavBtn.click()
+  await expect(page.locator('.blogs-table')).toBeVisible()
+}
+
+export const navigateToUsers = async(page) => {
+  const usersNavBtn = await page.getByTestId('users-nav-btn')
+  await usersNavBtn.click()
+  await page.locator('.users-table').waitFor()
+}
+
 export const login = async (page, username, password) => {
   await page.goto('/')
   const usernameLocator = await page.getByTestId('login-username-input')
@@ -26,6 +40,9 @@ export const createBlog = async (page, author, title, url) => {
   const authorLocator = await page.getByTestId('blogform-author-input')
   const titleLocator = await page.getByTestId('blogform-title-input')
   const urlLocator = await page.getByTestId('blogform-url-input')
+  await expect(authorLocator).toBeVisible()
+  await expect(titleLocator).toBeVisible()
+  await expect(urlLocator).toBeVisible()
   await authorLocator.fill(author)
   await titleLocator.fill(title)
   await urlLocator.fill(url)
@@ -35,72 +52,47 @@ export const createBlog = async (page, author, title, url) => {
 
 export const likeBlog = async (page, blog) => {
   await navigateToBlogs(page)
-  const blogLocator = await getBlogByTitle(page, blog)
-  await blogLocator.click()
+  const blogLocator = await page.getByRole('cell', { name: blog })
+  await expect(blogLocator).toHaveCount(1)
+  await blogLocator.locator('..').click()
   const blogLikeBtnLocator = await page.getByTestId('blog-like-btn')
   await blogLikeBtnLocator.click()
   const pattern = /\/api\/blogs\/*/gm
   await page.waitForResponse(response => pattern.test(response.url()))
 }
 
-export const getBlogByTitle = async (page, title) => {
-  const allBlogTitlesLocator = await page.getByTestId('blogs-title').all()
-  for(const blogLocator of allBlogTitlesLocator) {
-    const content = await blogLocator.textContent()
-    if (content.indexOf(title) < 0) {
-      continue
-    }
-    return blogLocator
-  }
-}
-
 export const addComment = async (page, blog, comment) => {
   await navigateToBlogs(page)
-  const blogLocator = await getBlogByTitle(page, blog)
-  await blogLocator.click()
+  const blogLocator = await page.getByRole('cell', { name: blog })
+  await expect(blogLocator).toHaveCount(1)
+  await blogLocator.locator('..').click()
   const commentLocator = await page.getByTestId('blog-comment-input')
   await commentLocator.fill(comment)
+  const current = await page.getByTestId('blog-comment-text').all()
   await page.getByRole('button', { name: /comment/i }).click()
-  const pattern = /\/api\/blogs\/.*\/comments/i
-  await page.waitForResponse(response => pattern.test(response.url()))
+  await expect(page.getByTestId('blog-comment-text')).toHaveCount(current.length + 1)
 }
 
 export const getUserBlogCount = async(page, user) => {
   await navigateToUsers(page)
-  const allUsers = await page.getByTestId('users-name-text').all()
-  let re = new RegExp(user, 'i')
-  var userLocator = null
-  for (const locator of allUsers) {
-    if (re.test(await locator.textContent())) {
-      userLocator = locator
-      break
-    }
-  }
+  const userLocator = await page.getByRole('cell', { name: user })
+  await expect(userLocator).toHaveCount(1)
   await userLocator.locator('..').click()
-  await page.waitForResponse('https://dog.ceo/api/breeds/image/random')
-  const allBlogs = await page.getByTestId('user-blog').all()
+  const userDetailsLocator = await page.getByTestId('user')
+  await expect(userDetailsLocator).toHaveCount(1, { timeout: 100000 })
+  const allBlogs = await userDetailsLocator.getByRole('link').all()
   return allBlogs.length
 }
 
 
 export const deleteBlog = async(page, blog) => {
-  await navigateToBlogs(page)
-  page.on('dialog', async (dialog) => {
+  page.once('dialog', async (dialog) => {
     await dialog.accept()
   })
-  const blogLocator = await getBlogByTitle(page, blog)
-  await blogLocator.click()
+  await navigateToBlogs(page)
+  const blogLocator = await page.getByRole('cell', { name: blog })
+  await expect(blogLocator).toHaveCount(1)
+  await blogLocator.locator('..').click()
   await page.getByRole('button', { name: /delete/i }).click()
-  const pattern = /\/api\/blogs\/*/gm
-  await page.waitForResponse(response => pattern.test(response.url()))
-}
-
-export const navigateToBlogs = async(page) => {
-  const blogsNavBtn = await page.getByTestId('blogs-nav-btn')
-  await blogsNavBtn.click()
-}
-
-export const navigateToUsers = async(page) => {
-  const usersNavBtn = await page.getByTestId('users-nav-btn')
-  await usersNavBtn.click()
+  await expect(page.getByRole('cell', { name: blog })).toHaveCount(0)
 }
