@@ -52,7 +52,7 @@ export const addUser = (user) => {
   return async (dispatch) => {
     try {
       const addedUser = await UsersService.create(user)
-      await dispatch(appendUser(addedUser))
+      dispatch(appendUser(addedUser))
       dispatch(notify(true, `New user '${addedUser.name}' added successfully`))
       return true
     } catch (error) {

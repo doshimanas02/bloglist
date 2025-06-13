@@ -43,7 +43,10 @@ const Navigation = () => {
             <DropdownMenuItem onSelect={() => navigate(`/users/${user.id}`)}>
               My Account
             </DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => dispatch(logout())} data-testid='nav-menu-logout-item'>
+            <DropdownMenuItem onSelect={() => {
+              dispatch(logout())
+              navigate('/login')
+            }} data-testid='nav-menu-logout-item'>
               Logout
             </DropdownMenuItem>
           </DropdownMenuContent>

@@ -4,6 +4,7 @@ import { Navigate, useLocation } from 'react-router'
 const RequireAuth = ({ children }) => {
   const loggedInUser = useSelector((state) => state.loggedInUser)
   const location = useLocation()
+  console.log(loggedInUser)
   return loggedInUser ? (
     children
   ) : (
