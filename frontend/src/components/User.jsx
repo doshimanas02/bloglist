@@ -26,7 +26,7 @@ const User = ({ user }) => {
     )
   }
   return (
-    <div className="flex items-center justify-center m-4 p-4 gap-4">
+    <div className="flex items-center justify-center m-4 p-4 gap-4" data-testid='user'>
       <div>
         <img style={{ width: '200px', height: '200px' }} src={imageUrl} />
         <p className="text-4xl">{user.name}</p>

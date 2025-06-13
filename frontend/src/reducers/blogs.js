@@ -37,8 +37,8 @@ export const createBlog = (blog) => {
     try {
       const user = getState().loggedInUser
       const response = await BlogsService.createBlog(blog, user)
-      dispatch(appendBlog(response.data))
-      dispatch(fetchUser(user.id))
+      await dispatch(appendBlog(response.data))
+      await dispatch(fetchUser(user.id))
       dispatch(notify(true, `Added new blog '${blog.title}' successfully`))
     } catch (error) {
       handleError(error, dispatch, 'Failed to add new blog')
@@ -52,7 +52,7 @@ export const likeBlog = (blog) => {
     const user = getState().loggedInUser
     try {
       const response = await BlogsService.updateBlog(blog.id, updates, user)
-      dispatch(updateBlog(response.data))
+      await dispatch(updateBlog(response.data))
     } catch (error) {
       handleError(error, dispatch, 'Failed to like blog')
     }
@@ -67,12 +67,13 @@ export const removeBlog = (blog) => {
     }
     try {
       await BlogsService.deleteBlog(blog, user)
-      dispatch(deleteBlog(blog))
-      dispatch(fetchUser(user.id))
+      await dispatch(deleteBlog(blog))
+      await dispatch(fetchUser(user.id))
       dispatch(notify(true, `Deleted blog '${blog.title}' successfully`))
     } catch (error) {
       handleError(error, dispatch, 'Failed to delete blog')
     }
+    return true
   }
 }
 

@@ -47,16 +47,10 @@ const App = () => {
           <Blogs />
         </RequireAuth>} />
         <Route path="/blogs/:id" element={<Blog blog={blog} />} />
-        <Route
-          path="/login"
-          element={loggedInUser ? <Navigate replace to="/" /> : <Login />}
-        />
+        <Route path="/login" element={<Login />} />
         <Route path="/" element={<Navigate replace to="/blogs" />} />
         <Route path="*" element={<div><p className="text-center text-4xl p-10">404 Not found</p></div>} />
-        <Route
-          path="/register"
-          element={loggedInUser ? <Navigate replace to="/" /> : <UserForm />}
-        />
+        <Route path="/register" element={<UserForm />} />
       </Routes>
     </div>
   )
