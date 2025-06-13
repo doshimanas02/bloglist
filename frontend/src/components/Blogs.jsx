@@ -25,9 +25,9 @@ const Blogs = () => {
   let blogsHtml = ''
 
   if (!blogs) {
-    blogsHtml = <p>Loading blogs...</p>
+    blogsHtml = <p className="text-center text-4xl m-10 p-10">Loading blogs...</p>
   } else if (blogs.length === 0) {
-    blogsHtml = <p>No Blogs yet!</p>
+    blogsHtml = <p className="text-center text-4xl m-10 p-10">No Blogs yet!</p>
   } else {
     blogsHtml = (
       <div className="mt-4">
