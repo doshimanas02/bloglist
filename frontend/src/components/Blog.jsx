@@ -28,7 +28,7 @@ const Blog = ({ blog }) => {
     defaultValues: { comment: '' },
   })
 
-  if (!blog) {
+  if (!blog || !user) {
     return (
       <div>
         <p className="text-center text-4xl m-10 p-10">404 Blog not found</p>
