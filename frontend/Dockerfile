@@ -4,6 +4,6 @@ WORKDIR /usr/src/app
 
 COPY --chown=node:node . .
 
-RUN npm ci
+RUN npm install
 
 CMD ["npm","run","build"]
