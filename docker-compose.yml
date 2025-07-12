@@ -23,7 +23,6 @@ services:
       - frontend
     volumes:
       - prod-frontend-build:/usr/src/app/dist
-    command: bash -c "npx playwright install --with-deps chromium && npm run test:e2e && npm run start"
   
   nginx:
     image: nginx

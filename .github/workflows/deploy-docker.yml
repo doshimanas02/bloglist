@@ -40,8 +40,10 @@ jobs:
               with:
                 version: latest
             - run: docker login -u doshimanas02 -p ${{secrets.DOCKER_TOKEN}}
-            - run: docker compose build backend
-            - run: docker compose push backend
+            - run: docker compose up
+            - run: npm --prefix ./backend install
+            - run: npx playwright install --with-deps chromium
+            - run: npm --prefix ./backend run test:e2e
     
     # deploy:
     #     runs-on: ubuntu-22.04
