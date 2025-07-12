@@ -19,7 +19,7 @@ mongoose.connect(config.MONGO_URI).then(() => {
 const app = express()
 app.use(cors())
 app.use(express.json())
-app.use(express.static('dist-fe'))
+app.use(express.static('dist'))
 app.use(middleware.tokenExtractor)
 app.use(middleware.requestLogger)
 
@@ -33,7 +33,7 @@ if (process.env.NODE_ENV === 'test') {
 }
 
 app.get('/*', function (req, res) {
-  res.sendFile(path.join(__dirname, '../dist-fe', 'index.html'))
+  res.sendFile(path.join(__dirname, './dist', 'index.html'))
 })
 app.use(middleware.errorHandler)
 module.exports = app

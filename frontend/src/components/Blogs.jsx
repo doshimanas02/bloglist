@@ -9,9 +9,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { fetchBlogs } from '../reducers/blogs'
 
 const Blogs = () => {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const blogs = useSelector((state) => {
     const blogs = state.blogs
     if (!blogs) {
@@ -21,6 +25,10 @@ const Blogs = () => {
     blogsCopy.sort((a, b) => b.likes - a.likes)
     return blogsCopy
   })
+
+  useEffect(() => {
+    dispatch(fetchBlogs())
+  }, [])
 
   let blogsHtml = ''
 

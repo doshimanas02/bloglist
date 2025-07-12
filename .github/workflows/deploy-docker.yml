@@ -1,0 +1,49 @@
+name: Deployment Pipeline with Docker
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:        
+        branches:
+            - main
+        types:
+            - closed
+            - synchronize
+            - opened
+
+env:
+    MONGO_URI: ${{ secrets.MONGO_URI }}
+    TEST_MONGO_URI: ${{ secrets.TEST_MONGO_URI }}
+    SECRET: ${{ secrets.SECRET }}
+        
+
+jobs:
+    test:
+        runs-on: ubuntu-22.04
+        steps:
+            - uses: actions/checkout@v4
+            - uses: docker/setup-compose-action@v1
+              with:
+                version: latest
+            - run: docker compose -f ./docker-compose.dev.yml up -d
+            - run: npm --prefix ./e2e-tests install
+            - run: npx playwright install --with-deps chromium
+            - run: npm --prefix ./e2e-tests run test:e2e
+
+    build:
+        runs-on: ubuntu-22.04
+        if: false
+        steps:
+            - uses: actions/checkout@v4
+            - uses: docker/setup-compose-action@v1
+              with:
+                version: latest
+            - run: docker login -u doshimanas02 -p ${{secrets.DOCKER_TOKEN}}
+            - run: docker compose build
+            - run: docker compose push backend
+    
+    # deploy:
+    #     runs-on: ubuntu-22.04
+    #     steps:
+    #         - run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
