@@ -41,9 +41,9 @@ jobs:
                 version: latest
             - run: docker login -u doshimanas02 -p ${{secrets.DOCKER_TOKEN}}
             - run: docker compose up -d
-            - run: npm --prefix ./backend install
+            - run: npm --prefix ./e2e-tests install
             - run: npx playwright install --with-deps chromium
-            - run: npm --prefix ./backend run test:e2e
+            - run: npm --prefix ./e2e-tests run test:e2e
     
     # deploy:
     #     runs-on: ubuntu-22.04
