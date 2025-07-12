@@ -1,0 +1,39 @@
+services:
+
+  frontend:
+    image: bloglist-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    environment:
+      - VITE_BACKEND_URL=/api/
+    volumes:
+      - prod-frontend-build:/usr/src/app/dist
+
+  backend:
+    image: bloglist-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - MONGO_URI=${MONGO_URI}
+      - TEST_MONGO_URI=${TEST_MONGO_URI}
+      - SECRET=${SECRET}
+    depends_on:
+      - frontend
+    volumes:
+      - prod-frontend-build:/usr/src/app/dist
+    command: bash -c "npx playwright install --with-deps chromium && npm run test:e2e && npm run start"
+  
+  nginx:
+    image: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 8080:80
+    depends_on:
+      - backend
+      - frontend
+
+volumes:
+  prod-frontend-build:

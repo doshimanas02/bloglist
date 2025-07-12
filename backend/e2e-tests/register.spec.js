@@ -19,9 +19,9 @@ describe('register', () => {
   })
   test('can register and login with new creds', async({ page }) => {
     await register(page, 'manas', 'manas', 'manasdoshi')
-    await page.waitForURL('/login', { timeout: 2000 })
+    await page.waitForURL('/login', { timeout: 3000 })
     await login(page, 'manas', 'manasdoshi')
-    await page.waitForURL('/blogs', { timeout: 2000 })
+    await page.waitForURL('/blogs', { timeout: 3000 })
     await expect(page).toHaveURL('/blogs')
   })
 })

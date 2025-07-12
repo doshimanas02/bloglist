@@ -10,16 +10,16 @@ const __dirname = path.dirname(__filename)
 
 // https://vite.dev/config/
 export default defineConfig({
-  root: 'frontend',
+  root: '',
   build: {
-    outDir: '../dist-fe', // Output directory relative to the root
+    outDir: 'dist', // Output directory relative to the root
     emptyOutDir: true, // Clear the outDir on build
   },
-  publicDir: 'frontend/public',
+  publicDir: 'public',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './frontend/src')
+      '@': path.resolve(__dirname, './src')
     }
   },
   test: {
@@ -28,9 +28,10 @@ export default defineConfig({
     setupFiles: './testSetup.js'
   },
   server: {
+    allowedHosts: ["frontend"],
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        target: process.env.VITE_BACKEND_URL,
         changeOrigin: true,
       },
     }
