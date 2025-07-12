@@ -21,29 +21,27 @@ env:
 jobs:
     test:
         runs-on: ubuntu-22.04
-        if: false
         steps:
             - uses: actions/checkout@v4
-            - uses: actions/setup-node@v4
+            - uses: docker/setup-compose-action@v1
               with:
-                node-version: 18
-            - run: npm --prefix ./backend install
-            - run: npm --prefix ./backend run test
+                version: latest
+            - run: docker compose -f ./docker-compose.dev.yml up -d
+            - run: npm --prefix ./e2e-tests install
             - run: npx playwright install --with-deps chromium
-            - run: npm --prefix ./backend run test:e2e
+            - run: npm --prefix ./e2e-tests run test:e2e
 
     build:
         runs-on: ubuntu-22.04
+        if: false
         steps:
             - uses: actions/checkout@v4
             - uses: docker/setup-compose-action@v1
               with:
                 version: latest
             - run: docker login -u doshimanas02 -p ${{secrets.DOCKER_TOKEN}}
-            - run: docker compose up -d
-            - run: npm --prefix ./e2e-tests install
-            - run: npx playwright install --with-deps chromium
-            - run: npm --prefix ./e2e-tests run test:e2e
+            - run: docker compose build
+            - run: docker compose push backend
     
     # deploy:
     #     runs-on: ubuntu-22.04
