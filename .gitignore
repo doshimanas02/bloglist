@@ -8,11 +8,11 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-package-lock.json
 dist*
 coverage
 *.local
 .env
+test-results
 
 # Editor directories and files
 .vscode/*
