@@ -1,5 +1,7 @@
 FROM node:18
 
+RUN echo $MONGO_URI
+
 WORKDIR /usr/src/app
 
 COPY --chown=node:node . .
@@ -7,7 +9,5 @@ COPY --chown=node:node . .
 RUN npm install
 
 RUN npm run test
-
-RUN echo $MONGO_URI
 
 CMD ["npm", "run", "start"]
