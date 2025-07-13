@@ -27,6 +27,7 @@ jobs:
               with:
                 version: latest
             - run: docker compose -f ./docker-compose.dev.yml up -d
+            - run: docker ps -all
             - run: npm --prefix ./e2e-tests install
             - run: npx playwright install --with-deps chromium
             - run: npm --prefix ./e2e-tests run test:e2e
