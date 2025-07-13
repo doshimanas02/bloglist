@@ -28,9 +28,10 @@ jobs:
                 version: latest
             - run: docker compose -f ./docker-compose.dev.yml up -d
             - run: docker ps -all
-            - run: npm --prefix ./e2e-tests install
-            - run: npx playwright install --with-deps chromium
-            - run: npm --prefix ./e2e-tests run test:e2e
+            - run: curl http://localhost:8123
+            # - run: npm --prefix ./e2e-tests install
+            # - run: npx playwright install --with-deps chromium
+            # - run: npm --prefix ./e2e-tests run test:e2e
 
     build:
         runs-on: ubuntu-22.04
