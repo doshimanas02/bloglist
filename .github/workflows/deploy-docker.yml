@@ -23,9 +23,6 @@ jobs:
         runs-on: ubuntu-22.04
         steps:
             - uses: actions/checkout@v4
-            - uses: docker/setup-compose-action@v1
-              with:
-                version: latest
             - run: docker compose -f ./docker-compose.dev.yml up -d
             - run: docker ps -all
             - run: curl http://localhost:8123
