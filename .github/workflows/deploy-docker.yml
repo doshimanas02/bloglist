@@ -25,7 +25,7 @@ jobs:
             - uses: actions/checkout@v4
             - run: docker compose -f ./docker-compose.dev.yml up -d
             - run: docker ps -all
-            - run: curl http://localhost:8123
+            - run: curl http://0.0.0.0:8080
             # - run: npm --prefix ./e2e-tests install
             # - run: npx playwright install --with-deps chromium
             # - run: npm --prefix ./e2e-tests run test:e2e
