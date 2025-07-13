@@ -19,8 +19,9 @@ env:
         
 
 jobs:
-    test:
+    start_service:
         runs-on: ubuntu-22.04
+        container: ubuntu
         steps:
             - uses: actions/checkout@v4
             - uses: docker/setup-compose-action@v1
