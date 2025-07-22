@@ -8,10 +8,15 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { useDispatch } from 'react-redux'
+import { useEffect } from 'react'
+import { fetchUsers } from '../reducers/users'
 
 const Users = () => {
+  const dispatch = useDispatch()
   const users = useSelector((state) => state.users)
   const navigate = useNavigate()
+  useEffect(() => { dispatch(fetchUsers()) }, [])
   if (!users) {
     return <div>Loading...</div>
   }
