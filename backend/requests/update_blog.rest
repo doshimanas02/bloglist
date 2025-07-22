@@ -1,0 +1,7 @@
+PUT http://localhost:3000/api/blogs/67ed7e980dc923d91ffb14a3
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1hbmFzZG9zaGkiLCJpZCI6IjY3ZWQ3ZGVmMGRjOTIzZDkxZmZiMTQ5ZiIsImlhdCI6MTc0NzkwOTcxMiwiZXhwIjoxNzQ3OTEzMzEyfQ.8k7J1b_RbfNXG9Yhch-WZV_6sKFwHCq4Z3cBwbiGE4s
+Content-Type: application/json
+
+{
+    "title": "Not Hello World"
+}

@@ -1,0 +1,9 @@
+POST http://localhost:3000/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRvc2hpbWFuYXMwMiIsImlkIjoiNjgwY2VkZTllZDIwNWViOWMwNjU2MDkyIiwiaWF0IjoxNzQ1Njc5NDI4LCJleHAiOjE3NDU2ODMwMjh9.nQjG0fa5Dr92vX5qQ-O4Q89IPsXEfgfcgAmfciZADo0
+
+{
+    "title": "Hello World",
+    "author": "Every Dev",
+    "url": "localhost" 
+}
